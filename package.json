@@ -1,0 +1,11 @@
+{
+  "name": "goStack08-modulo1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/harbsprog/goStack08-modulo1.git",
+  "author": "Harbs <harbsprog@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
