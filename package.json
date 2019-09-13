@@ -5,7 +5,14 @@
   "repository": "https://github.com/harbsprog/goStack08-modulo1.git",
   "author": "Harbs <harbsprog@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
   }
 }
