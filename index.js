@@ -5,8 +5,41 @@ server.use(express.json());
 
 const users = ["Diego", "Claúdio", "Victor"];
 
+//Middleware
+server.use((req, res, next) => {
+  console.time("Request");
+  console.log(`Método: ${req.method} | URL : ${req.url}`);
+
+  next();
+
+  console.timeEnd("Request");
+});
+
+//Chek if the User Exists
+function checkUserExists(req, res, next) {
+  if (!req.body.name) {
+    return res.status(400).json({ error: "User name is required." });
+  }
+
+  next();
+}
+
+//Chek if the array index Exists
+function checkUserInArray(req, res, next) {
+  const { index } = req.params;
+  const user = users[index];
+
+  if (!user) {
+    return res.status(400).json({ error: "User does not exists." });
+  }
+
+  req.user = user;
+
+  next();
+}
+
 //User Create
-server.post("/userCreate", (req, res) => {
+server.post("/userCreate", checkUserExists, (req, res) => {
   const { name } = req.body;
   users.push(name);
 
@@ -14,17 +47,22 @@ server.post("/userCreate", (req, res) => {
 });
 
 //User Update
-server.put("/userUpdate/:index", (req, res) => {
-  const { name } = req.body;
-  const { index } = req.params;
+server.put(
+  "/userUpdate/:index",
+  checkUserInArray,
+  checkUserExists,
+  (req, res) => {
+    const { name } = req.body;
+    const { index } = req.params;
 
-  users[index] = name;
+    users[index] = name;
 
-  return res.json({ message: `User ${name} has ben successfully updated.` });
-});
+    return res.json({ message: `User ${name} has ben successfully updated.` });
+  }
+);
 
 //User Delete
-server.delete("/userDelete/:index", (req, res) => {
+server.delete("/userDelete/:index", checkUserInArray, (req, res) => {
   const { index } = req.params;
   const userName = users[index];
 
@@ -41,9 +79,8 @@ server.get("/users", (req, res) => {
 });
 
 //User array index List
-server.get("/test/arr/:index", (req, res) => {
-  const { index } = req.params;
-  return res.json(users[index]);
+server.get("/test/arr/:index", checkUserInArray, (req, res) => {
+  return res.json(req.user);
 });
 
 //Route Param
